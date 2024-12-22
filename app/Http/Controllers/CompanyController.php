@@ -67,4 +67,43 @@ class CompanyController extends Controller
 
         return redirect()->route('admin.companies.index')->with('success', 'Status perusahaan berhasil diperbarui.');
     }
+
+    // Form untuk mengedit perusahaan
+    public function edit(Company $company)
+    {
+        // Memastikan user hanya dapat mengedit perusahaan mereka sendiri
+        if ($company->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return view('companies.edit', compact('company'));
+    }
+
+    // Proses update data perusahaan
+    public function update(Request $request, Company $company)
+    {
+        if ($company->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:500',
+            'description' => 'nullable|string|max:1000',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($request->hasFile('logo')) {
+            $logoPath = $request->file('logo')->store('company_logos', 'public');
+            $company->update(['logo' => $logoPath]);
+        }
+
+        $company->update([
+            'name' => $request->name,
+            'address' => $request->address,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->route('companies.index')->with('success', 'Data perusahaan berhasil diperbarui!');
+    }
 }

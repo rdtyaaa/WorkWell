@@ -22,6 +22,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/companies/create', [CompanyController::class, 'create'])->name('companies.create');
     Route::post('/companies', [CompanyController::class, 'store'])->name('companies.store');
 
+    // Route::middleware(['isEmployer'])->group(function () {
+    Route::get('/companies/{company}/edit', [CompanyController::class, 'edit'])->name('companies.settings');
+    Route::put('/companies/{company}', [CompanyController::class, 'update'])->name('companies.update');
+// });
+
     // Routes untuk admin
     // Route::middleware(['role:admin'])->group(function () {
         Route::get('/admin/companies', [CompanyController::class, 'adminIndex'])->name('admin.companies.index');
