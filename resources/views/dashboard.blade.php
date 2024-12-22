@@ -40,13 +40,15 @@
     </div>
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <h1 class="text-xl font-semibold text-gray-800 ">Temukan Peluang Karier Impian Anda</h1>
-            <p class="text-sm text-gray-500">Temukan pekerjaan yang sesuai dengan keterampilan dan minat Anda, dapatkan rekomendasi karier terbaik, dan lamar pekerjaan dengan mudah.</p>
-            <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
-                </div>
+            <div id="title">
+                <h1 class="text-xl font-semibold text-gray-800">Temukan Peluang Karier Impian Anda</h1>
+                <p class="text-sm text-gray-500">Temukan pekerjaan yang sesuai dengan keterampilan dan minat Anda,
+                    dapatkan rekomendasi karier terbaik, dan lamar pekerjaan dengan mudah.</p>
             </div>
+
+            <x-card :image="'/docs/images/products/apple-watch.png'" :title="'Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport'" :rating="'5.0'" :price="'$599'" :buttonText="'Add to cart'" />
+
+
         </div>
     </div>
 </x-app-layout>
