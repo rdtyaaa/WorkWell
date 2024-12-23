@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model
 {
-
     protected $fillable = [
         'name',
         'address',
@@ -19,5 +18,10 @@ class Company extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function jobVacancies()
+    {
+        return $this->hasMany(JobVacancy::class);
     }
 }

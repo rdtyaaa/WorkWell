@@ -137,7 +137,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#"
+                        <a href="{{ route('job_vacancies.index') }}"
                             class="group flex items-center rounded-lg p-2 text-white hover:bg-sky-800 dark:text-white dark:hover:bg-gray-700">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                 class="size-5">

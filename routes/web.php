@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\JobVacancyController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,6 +26,7 @@ Route::middleware('auth')->group(function () {
     // Route::middleware(['isEmployer'])->group(function () {
     Route::get('/companies/{company}/edit', [CompanyController::class, 'edit'])->name('companies.settings');
     Route::put('/companies/{company}', [CompanyController::class, 'update'])->name('companies.update');
+    Route::resource('job_vacancies', JobVacancyController::class);
 // });
 
     // Routes untuk admin
