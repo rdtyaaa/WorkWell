@@ -77,6 +77,9 @@
                         <x-dropdown-link :href="route('companies.index')">
                             {{ __('Perusahaan') }}
                         </x-dropdown-link>
+                        <x-dropdown-link :href="route('personal_data.index')">
+                            {{ __('Pengalaman') }}
+                        </x-dropdown-link>
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profil') }}
                         </x-dropdown-link>

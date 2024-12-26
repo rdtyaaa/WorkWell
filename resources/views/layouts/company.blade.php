@@ -124,6 +124,21 @@
                 </svg>
                 <ul class="mt-12 space-y-2 font-medium">
                     <li>
+                        <a href="{{ route('dashboard') }}"
+                            class="group flex items-center rounded-lg p-2 text-white hover:bg-sky-800 dark:text-white dark:hover:bg-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                class="size-5">
+                                <path
+                                    d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
+                                <path
+                                    d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
+                            </svg>
+
+
+                            <span class="ms-3">Home</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('companies.settings', $company) }}"
                             class="group flex items-center rounded-lg p-2 text-white hover:bg-sky-800 dark:text-white dark:hover:bg-gray-700">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -152,11 +167,21 @@
                     </li>
                 </ul>
             </div>
+            <svg class="absolute bottom-0 -left-3 flex h-48 -translate-x-32 justify-start"
+                xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 124 100"
+                fill="none">
+                <path
+                    d="M19.375 36.7818V100.625C19.375 102.834 21.1659 104.625 23.375 104.625H87.2181C90.7818 104.625 92.5664 100.316 90.0466 97.7966L26.2034 33.9534C23.6836 31.4336 19.375 33.2182 19.375 36.7818Z"
+                    fill="#075985" />
+                <circle cx="90" cy="30" r="18.1641" fill="#c026d3" />
+                <circle cx="100" cy="70" r="10" fill="#082f49" />
+            </svg>
         </aside>
     </div>
     <main class="rounded-lg p-8">
         @yield('content') <!-- Konten yang akan dimasukkan di halaman lain -->
     </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.js"></script>
 </body>
 
 </html>

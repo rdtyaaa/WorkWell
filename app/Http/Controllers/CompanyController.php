@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends Controller
@@ -56,16 +58,38 @@ class CompanyController extends Controller
         return view('admin.companies.index', compact('companies'));
     }
 
-    // Admin: Persetujuan atau penolakan perusahaan
     public function updateStatus(Request $request, Company $company)
     {
-        $request->validate([
-            'status' => 'required|in:approved,rejected',
-        ]);
+        // Mulai transaksi
+        DB::beginTransaction();
 
-        $company->update(['status' => $request->status]);
+        try {
+            // Validasi input
+            $request->validate([
+                'status' => 'required|in:approved,rejected',
+            ]);
 
-        return redirect()->route('admin.companies.index')->with('success', 'Status perusahaan berhasil diperbarui.');
+            // Update status perusahaan
+            $company->update(['status' => $request->status]);
+
+            // Jika status perusahaan disetujui, ubah role pengguna menjadi 'employee'
+            if ($request->status === 'approved') {
+                $user = $company->user;
+                if ($user && $user->role !== 'employee') {
+                    $user->update(['role' => 'employee']);
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('admin.companies.index')->with('success', 'Status perusahaan berhasil diperbarui.');
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi error
+            DB::rollback();
+
+            // Tangani error
+            return redirect()->route('admin.companies.index')->with('error', 'Terjadi kesalahan saat memperbarui status perusahaan.');
+        }
     }
 
     // Form untuk mengedit perusahaan

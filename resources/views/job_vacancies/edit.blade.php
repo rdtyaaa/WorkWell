@@ -1,7 +1,7 @@
 @extends('layouts.company')
 
 @section('content')
-    <div class="mx-auto max-w-3xl rounded-lg bg-white p-8 shadow-lg">
+    <div class="ml-64 p-4 mx-auto bg-white">
         <h1 class="mb-6 text-2xl font-semibold text-gray-800">Edit Lowongan Pekerjaan</h1>
 
         <form action="{{ route('job_vacancies.update', $jobVacancy) }}" method="POST">

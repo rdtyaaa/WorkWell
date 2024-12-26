@@ -45,8 +45,12 @@
                 <p class="text-sm text-gray-500">Temukan pekerjaan yang sesuai dengan keterampilan dan minat Anda,
                     dapatkan rekomendasi karier terbaik, dan lamar pekerjaan dengan mudah.</p>
             </div>
-
-            <x-card :image="'/docs/images/products/apple-watch.png'" :title="'Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport'" :rating="'5.0'" :price="'$599'" :buttonText="'Add to cart'" />
+            <div class="mt-4 flex flex-wrap gap-4">
+                @foreach ($jobs as $job)
+                    <x-card :logo="$job->company->logo" :companyName="$job->company->name" :position="$job->position" :salary="$job->salary" :description="$job->company->name"
+                        :location="$job->location" />
+                @endforeach
+            </div>
 
 
         </div>

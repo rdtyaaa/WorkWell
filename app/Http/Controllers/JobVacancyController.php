@@ -10,10 +10,21 @@ use Illuminate\Support\Facades\Auth;
 
 class JobVacancyController extends Controller
 {
+    public function dashboard()
+    {
+        // Ambil data lowongan pekerjaan dengan relasi ke perusahaan
+        $jobs = JobVacancy::with('company')->get();
+
+        // Kirim data ke view
+        return view('dashboard', compact('jobs'));
+    }
+
     // Menampilkan form untuk membuat lowongan pekerjaan
     public function create()
     {
-        return view('job_vacancies.create');
+        $user = Auth::user();
+        $company = $user->company;
+        return view('job_vacancies.create', compact('company'));
     }
 
     // Menyimpan lowongan pekerjaan baru
@@ -55,7 +66,9 @@ class JobVacancyController extends Controller
     // Menampilkan form untuk mengedit lowongan pekerjaan
     public function edit(JobVacancy $jobVacancy)
     {
-        return view('job_vacancies.edit', compact('jobVacancy'));
+        $user = Auth::user();
+        $company = $user->company;
+        return view('job_vacancies.edit', compact('jobVacancy', 'company'));
     }
 
     // Memperbarui lowongan pekerjaan
