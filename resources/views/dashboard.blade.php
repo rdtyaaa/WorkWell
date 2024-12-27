@@ -48,7 +48,7 @@
             <div class="mt-4 flex flex-wrap gap-4">
                 @foreach ($jobs as $job)
                     <x-card :logo="$job->company->logo" :companyName="$job->company->name" :position="$job->position" :salary="$job->salary" :description="$job->company->name"
-                        :location="$job->location" />
+                        :location="$job->location" :jobId="$job->id" />
                 @endforeach
             </div>
 

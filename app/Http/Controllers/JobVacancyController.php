@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use App\Models\JobVacancy;
+use App\Models\Application;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -98,5 +99,25 @@ class JobVacancyController extends Controller
     {
         $jobVacancy->delete();
         return redirect()->route('job_vacancies.index')->with('success', 'Lowongan pekerjaan berhasil dihapus!');
+    }
+
+    // JobVacancyController.php
+
+    public function showApplicants(Request $request, JobVacancy $jobVacancy)
+    {
+        $user = Auth::user();
+        $company = $user->company;
+
+        $statusFilter = $request->input('status');
+
+        $applications = Application::where('job_id', $jobVacancy->id);
+
+        if ($statusFilter) {
+            $applications = $applications->where('status', $statusFilter);
+        }
+
+        $applications = $applications->get();
+
+        return view('job_vacancies.applicants', compact('jobVacancy', 'applications', 'company'));
     }
 }

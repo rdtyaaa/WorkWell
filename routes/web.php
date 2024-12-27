@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\JobVacancyController;
+use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\PersonalDataController;
 
 Route::get('/', function () {
@@ -20,13 +22,28 @@ Route::middleware('auth')->group(function () {
     Route::get('/companies/create', [CompanyController::class, 'create'])->name('companies.create');
     Route::post('/companies', [CompanyController::class, 'store'])->name('companies.store');
 
+    Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
+    Route::get('/jobs/{jobId}/apply', [ApplicationController::class, 'create'])->name('application.apply');
+    Route::post('/jobs/{jobId}/apply', [ApplicationController::class, 'store'])->name('application.store');
+    Route::get('/applications/{id}/edit', [ApplicationController::class, 'edit'])->name('applications.edit');
+    Route::put('/applications/{id}', [ApplicationController::class, 'update'])->name('applications.update');
+    Route::delete('/applications/{id}', [ApplicationController::class, 'destroy'])->name('applications.destroy');
+    Route::get('applications/{id}', [ApplicationController::class, 'show'])->name('applications.show');
+
     // Route::middleware(['isEmployer'])->group(function () {
     Route::get('/companies/{company}/edit', [CompanyController::class, 'edit'])->name('companies.settings');
     Route::put('/companies/{company}', [CompanyController::class, 'update'])->name('companies.update');
     Route::resource('job_vacancies', JobVacancyController::class);
+    Route::get('/job-vacancies/{jobVacancy}/applicants', [JobVacancyController::class, 'showApplicants'])->name('job_vacancies.show_applicants');
+    Route::put('applications/{application}/updateStatus', [ApplicationController::class, 'updateStatus'])->name('applications.updateStatus');
+
     Route::get('/dashboard', [JobVacancyController::class, 'dashboard'])->name('dashboard');
 
     Route::resource('personal_data', PersonalDataController::class);
+    Route::resource('users', UserController::class);
+    Route::post('/admin/users/{user}/toggle-admin', [UserController::class, 'toggleAdmin'])->name('users.toggleAdmin');
+
+
     // });
 
     // Routes untuk admin

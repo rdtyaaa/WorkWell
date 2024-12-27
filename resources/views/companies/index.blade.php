@@ -34,10 +34,6 @@
                                             : 'bg-yellow-500 text-white') }} rounded px-2 py-1 text-xs font-semibold">
                                     {{ ucfirst($company->status) }}
                                 </span>
-                                <a href="{{ route('companies.settings', $company) }}"
-                                    class="rounded px-4 py-2 text-sm text-blue-500">
-                                    Pengaturan
-                                </a>
                             </td>
                         </tr>
                     @endforeach

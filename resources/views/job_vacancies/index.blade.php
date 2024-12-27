@@ -35,11 +35,14 @@
                         @foreach ($jobVacancies as $jobVacancy)
                             <tr class="border-b">
                                 <td class="px-6 py-4 text-sm text-gray-900">{{ $jobVacancy->position }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-500">{{ $jobVacancy->salary }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Rp
+                                    {{ number_format($jobVacancy->salary, 0, ',', '.') }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-500">{{ $jobVacancy->location }}</td>
-                                <td class="px-6 py-4 text-sm font-medium">
+                                <td class="flex gap-4 px-6 py-4 text-sm font-medium">
+                                    <a href="{{ route('job_vacancies.show_applicants', $jobVacancy) }}"
+                                        class="text-green-600 hover:text-blue-900">Lihat Pelamar</a>
                                     <a href="{{ route('job_vacancies.edit', $jobVacancy) }}"
-                                        class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                        class="text-blue-600 hover:text-indigo-900">Edit</a>
                                     <button data-modal-target="delete-modal-{{ $jobVacancy->id }}"
                                         data-modal-toggle="delete-modal-{{ $jobVacancy->id }}"
                                         class="text-red-600 hover:text-red-800">

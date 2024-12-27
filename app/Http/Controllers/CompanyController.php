@@ -47,6 +47,15 @@ class CompanyController extends Controller
     // Daftar perusahaan yang diajukan user
     public function index()
     {
+        // Ambil perusahaan yang dimiliki oleh user yang sedang login
+        $company = Company::where('user_id', Auth::id())->first();
+
+        // Jika perusahaan sudah disetujui, redirect ke route 'companies.settings'
+        if ($company && $company->status === 'approved') {
+            return redirect()->route('companies.settings', ['company' => $company->id]);
+        }
+
+        // Jika belum disetujui, tampilkan daftar perusahaan
         $companies = Company::where('user_id', Auth::id())->get();
         return view('companies.index', compact('companies'));
     }
@@ -54,6 +63,7 @@ class CompanyController extends Controller
     // Admin: Kelola pengajuan perusahaan
     public function adminIndex()
     {
+
         $companies = Company::where('status', 'pending')->get();
         return view('admin.companies.index', compact('companies'));
     }

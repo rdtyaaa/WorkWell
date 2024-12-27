@@ -48,9 +48,20 @@
                     <x-nav-link :href="route('dashboard')" :active="false">
                         {{ __('Rekomendasi') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('companies.create')" :active="request()->routeIs('companies.create')">
-                        {{ __('Daftarkan Perusahaanmu!') }}
-                    </x-nav-link>
+                    @if (auth()->user()->role === 'employee')
+                        <x-nav-link :href="route('companies.index')" :active="request()->routeIs('companies.index')">
+                            {{ __('Kelola Perusahaan') }}
+                        </x-nav-link>
+                    @elseif (auth()->user()->role === 'admin')
+                        <x-nav-link :href="route('admin.companies.index')" :active="request()->routeIs('admin.companies.index')">
+                            {{ __('Admin Panel') }}
+                        </x-nav-link>
+                    @else
+                        <x-nav-link :href="route('companies.create')" :active="request()->routeIs('companies.create')">
+                            {{ __('Daftarkan Perusahaanmu!') }}
+                        </x-nav-link>
+                    @endif
+
                 </div>
             </div>
 
@@ -74,12 +85,22 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('companies.index')">
-                            {{ __('Perusahaan') }}
-                        </x-dropdown-link>
-                        <x-dropdown-link :href="route('personal_data.index')">
-                            {{ __('Pengalaman') }}
-                        </x-dropdown-link>
+                        @if (auth()->user()->role === 'employee')
+                            <x-dropdown-link :href="route('companies.index')">
+                                {{ __('Employee Panel') }}
+                            </x-dropdown-link>
+                        @elseif (auth()->user()->role === 'admin')
+                            <x-dropdown-link :href="route('admin.companies.index')">
+                                {{ __('Admin Panel') }}
+                            </x-dropdown-link>
+                        @else
+                            <x-dropdown-link :href="route('applications.index')">
+                                {{ __('Lamaran') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('personal_data.index')">
+                                {{ __('Pengalaman') }}
+                            </x-dropdown-link>
+                        @endif
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profil') }}
                         </x-dropdown-link>
