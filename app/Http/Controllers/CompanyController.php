@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
 {
@@ -63,7 +64,6 @@ class CompanyController extends Controller
     // Admin: Kelola pengajuan perusahaan
     public function adminIndex()
     {
-
         $companies = Company::where('status', 'pending')->get();
         return view('admin.companies.index', compact('companies'));
     }
@@ -92,7 +92,7 @@ class CompanyController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.companies.index')->with('success', 'Status perusahaan berhasil diperbarui.');
+            return back()->with('success', 'Status perusahaan berhasil diperbarui.');
         } catch (\Exception $e) {
             // Rollback transaksi jika terjadi error
             DB::rollback();
@@ -116,28 +116,55 @@ class CompanyController extends Controller
     // Proses update data perusahaan
     public function update(Request $request, Company $company)
     {
+        // Periksa apakah user memiliki otorisasi untuk mengedit perusahaan ini
         if ($company->user_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
-
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'address' => 'required|string|max:500',
+        // Validasi input
+        $validatedData = $request->validate([
+            'name' => 'string|max:255',
+            'address' => 'string|max:500',
             'description' => 'nullable|string|max:1000',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
+        // Jika ada file logo baru, simpan dan hapus logo lama (jika ada)
         if ($request->hasFile('logo')) {
-            $logoPath = $request->file('logo')->store('company_logos', 'public');
-            $company->update(['logo' => $logoPath]);
+            if ($company->logo && \Storage::exists('public/' . $company->logo)) {
+                \Storage::delete('public/' . $company->logo);
+            }
+
+            $validatedData['logo'] = $request->file('logo')->store('company_logos', 'public');
         }
 
-        $company->update([
-            'name' => $request->name,
-            'address' => $request->address,
-            'description' => $request->description,
-        ]);
+        // Update perusahaan dengan data yang sudah divalidasi
+        $company->update($validatedData);
 
-        return redirect()->route('companies.index')->with('success', 'Data perusahaan berhasil diperbarui!');
+        // Redirect dengan pesan sukses
+        return back()->with('success', 'Data perusahaan berhasil diperbarui!');
+    }
+
+    public function destroy(Company $company)
+    {
+        // Pastikan hanya user yang terkait yang bisa menghapus perusahaan ini
+        if ($company->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Hapus logo perusahaan jika ada
+        if ($company->logo && Storage::exists('public/' . $company->logo)) {
+            Storage::delete('public/' . $company->logo);
+        }
+
+        $user = $company->user;
+        if ($user && $user->role == 'employee') {
+            $user->update(['role' => 'user']);
+        }
+
+        // Hapus data perusahaan
+        $company->delete();
+
+        // Redirect dengan pesan sukses setelah penghapusan
+        return redirect()->route('companies.index')->with('success', 'Perusahaan berhasil dihapus!');
     }
 }

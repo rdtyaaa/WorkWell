@@ -13,14 +13,33 @@ class JobVacancyController extends Controller
 {
     public function dashboard()
     {
-        // Ambil data lowongan pekerjaan dengan relasi ke perusahaan
-        $jobs = JobVacancy::with('company')->get();
+        $jobs = JobVacancy::with('company')->inRandomOrder()->limit(8)->get();
 
-        // Kirim data ke view
         return view('dashboard', compact('jobs'));
     }
 
-    // Menampilkan form untuk membuat lowongan pekerjaan
+    public function recomendation(Request $request)
+    {
+        $jobs = JobVacancy::with('company')
+            ->when($request->has('job-search'), function ($query) use ($request) {
+                $query->where('position', 'like', '%' . $request->input('job-search') . '%');
+            })
+            ->when($request->has('location-search'), function ($query) use ($request) {
+                $query->where('location', 'like', '%' . $request->input('location-search') . '%');
+            })
+            ->inRandomOrder()
+            ->limit(30)
+            ->get();
+
+        if ($jobs->isEmpty()) {
+            $message = 'Tidak ada pekerjaan yang ditemukan.';
+        } else {
+            $message = null;
+        }
+
+        return view('recomendation', compact('jobs', 'message'));
+    }
+
     public function create()
     {
         $user = Auth::user();
@@ -28,7 +47,6 @@ class JobVacancyController extends Controller
         return view('job_vacancies.create', compact('company'));
     }
 
-    // Menyimpan lowongan pekerjaan baru
     public function store(Request $request)
     {
         $request->validate([
@@ -40,7 +58,7 @@ class JobVacancyController extends Controller
         ]);
 
         $user = Auth::user();
-        $company = $user->company; // Asumsi bahwa user sudah memiliki perusahaan yang terdaftar
+        $company = $user->company;
 
         JobVacancy::create([
             'position' => $request->position,
@@ -48,13 +66,12 @@ class JobVacancyController extends Controller
             'qualifications' => $request->qualifications,
             'salary' => $request->salary,
             'location' => $request->location,
-            'company_id' => $company->id, // Mengaitkan lowongan dengan perusahaan yang dimiliki user
+            'company_id' => $company->id,
         ]);
 
         return redirect()->route('job_vacancies.index')->with('success', 'Lowongan pekerjaan berhasil ditambahkan!');
     }
 
-    // Menampilkan daftar lowongan pekerjaan
     public function index()
     {
         $user = Auth::user();
@@ -64,7 +81,6 @@ class JobVacancyController extends Controller
         return view('job_vacancies.index', compact('jobVacancies', 'company'));
     }
 
-    // Menampilkan form untuk mengedit lowongan pekerjaan
     public function edit(JobVacancy $jobVacancy)
     {
         $user = Auth::user();
@@ -72,7 +88,6 @@ class JobVacancyController extends Controller
         return view('job_vacancies.edit', compact('jobVacancy', 'company'));
     }
 
-    // Memperbarui lowongan pekerjaan
     public function update(Request $request, JobVacancy $jobVacancy)
     {
         $request->validate([
@@ -94,14 +109,11 @@ class JobVacancyController extends Controller
         return redirect()->route('job_vacancies.index')->with('success', 'Lowongan pekerjaan berhasil diperbarui!');
     }
 
-    // Menghapus lowongan pekerjaan
     public function destroy(JobVacancy $jobVacancy)
     {
         $jobVacancy->delete();
         return redirect()->route('job_vacancies.index')->with('success', 'Lowongan pekerjaan berhasil dihapus!');
     }
-
-    // JobVacancyController.php
 
     public function showApplicants(Request $request, JobVacancy $jobVacancy)
     {
@@ -119,5 +131,11 @@ class JobVacancyController extends Controller
         $applications = $applications->get();
 
         return view('job_vacancies.applicants', compact('jobVacancy', 'applications', 'company'));
+    }
+
+    public function show($id)
+    {
+        $job = JobVacancy::with('company')->findOrFail($id);
+        return response()->json($job);
     }
 }

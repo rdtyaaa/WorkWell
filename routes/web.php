@@ -30,27 +30,27 @@ Route::middleware('auth')->group(function () {
     Route::delete('/applications/{id}', [ApplicationController::class, 'destroy'])->name('applications.destroy');
     Route::get('applications/{id}', [ApplicationController::class, 'show'])->name('applications.show');
 
-    // Route::middleware(['isEmployer'])->group(function () {
-    Route::get('/companies/{company}/edit', [CompanyController::class, 'edit'])->name('companies.settings');
-    Route::put('/companies/{company}', [CompanyController::class, 'update'])->name('companies.update');
-    Route::resource('job_vacancies', JobVacancyController::class);
-    Route::get('/job-vacancies/{jobVacancy}/applicants', [JobVacancyController::class, 'showApplicants'])->name('job_vacancies.show_applicants');
+    Route::get('/job-vacancies/{id}', [JobVacancyController::class, 'show'])->name('job-vacancies.show');
     Route::put('applications/{application}/updateStatus', [ApplicationController::class, 'updateStatus'])->name('applications.updateStatus');
 
     Route::get('/dashboard', [JobVacancyController::class, 'dashboard'])->name('dashboard');
-
+    Route::get('/recomendation', [JobVacancyController::class, 'recomendation'])->name('recomendation');
     Route::resource('personal_data', PersonalDataController::class);
-    Route::resource('users', UserController::class);
-    Route::post('/admin/users/{user}/toggle-admin', [UserController::class, 'toggleAdmin'])->name('users.toggleAdmin');
 
+    Route::middleware(['role:employee'])->group(function () {
+        Route::resource('job_vacancies', JobVacancyController::class);
+        Route::get('/companies/{company}/edit', [CompanyController::class, 'edit'])->name('companies.settings');
+        Route::put('/companies/{company}', [CompanyController::class, 'update'])->name('companies.update');
+        Route::delete('/companies/{company}', [CompanyController::class, 'destroy'])->name('companies.destroy');
+        Route::get('/job-vacancies/{jobVacancy}/applicants', [JobVacancyController::class, 'showApplicants'])->name('job_vacancies.show_applicants');
+    });
 
-    // });
-
-    // Routes untuk admin
-    // Route::middleware(['role:admin'])->group(function () {
-    Route::get('/admin/companies', [CompanyController::class, 'adminIndex'])->name('admin.companies.index');
-    Route::post('/admin/companies/{company}/status', [CompanyController::class, 'updateStatus'])->name('admin.companies.updateStatus');
-    // });
+    Route::middleware(['role:admin'])->group(function () {
+        Route::resource('users', UserController::class);
+        Route::post('/admin/users/{user}/toggle-admin', [UserController::class, 'toggleAdmin'])->name('users.toggleAdmin');
+        Route::get('/admin/companies', [CompanyController::class, 'adminIndex'])->name('admin.companies.index');
+        Route::post('/admin/companies/{company}/status', [CompanyController::class, 'updateStatus'])->name('admin.companies.updateStatus');
+    });
 });
 
 require __DIR__ . '/auth.php';

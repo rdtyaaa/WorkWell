@@ -3,12 +3,25 @@
         <h2 class="mb-6 text-2xl font-semibold text-gray-800">Ajukan Lamaran</h2>
 
         <!-- Detail Pekerjaan -->
+        <div class="mb-6 grid grid-cols-2 rounded-lg border bg-white shadow">
+            <div class="bg-sky-600 p-4 me-8 rounded-l-lg">
+                <img class="h-36 rounded-t-lg p-8" src="{{ asset('storage/' . $job->company->logo) }}"
+                    alt="{{ $job->company->name }} logo" />
+            </div>
+            <div class="py-4">
+                <h3 class="text-lg font-semibold text-gray-800">{{ $job->position }}</h3>
+                <p class="text-sm text-gray-600">{{ $job->company->name }}</p>
+                <p class="text-sm text-gray-600">Lokasi: {{ $job->location }}</p>
+                <p class="mt-2 text-sm font-medium text-blue-600">Gaji: Rp
+                    {{ number_format($job->salary, 0, ',', '.') }}
+                </p>
+            </div>
+        </div>
+
         <div class="mb-6 rounded-lg border bg-white p-4 shadow">
-            <h3 class="text-lg font-semibold text-gray-800">{{ $job->position }}</h3>
-            <p class="text-sm text-gray-600">Perusahaan: {{ $job->company->name }}</p>
-            <p class="text-sm text-gray-600">Lokasi: {{ $job->location }}</p>
-            <p class="mt-2 text-sm text-gray-600">{{ $job->description }}</p>
-            <p class="mt-2 text-sm font-medium text-blue-600">Gaji: Rp {{ number_format($job->salary, 0, ',', '.') }}</p>
+            <p class="mt-2 text-sm text-gray-800">{{ $job->description }}</p>
+            <p class="mt-6 text-sm text-gray-800">Kualifikasi: </p>
+            <p class="mt-2 text-sm text-gray-600">{{ $job->qualifications }}</p>
         </div>
 
         <!-- Form Pengajuan -->

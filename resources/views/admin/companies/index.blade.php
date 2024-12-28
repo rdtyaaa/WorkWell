@@ -9,6 +9,7 @@
                     <tr class="border-b">
                         <th class="border px-6 py-3 text-left text-sm font-medium text-gray-600">Nama</th>
                         <th class="border px-6 py-3 text-left text-sm font-medium text-gray-600">Alamat</th>
+                        <th class="border px-6 py-3 text-left text-sm font-medium text-gray-600">Pendaftar</th>
                         <th class="border px-6 py-3 text-left text-sm font-medium text-gray-600">Aksi</th>
                     </tr>
                 </thead>
@@ -17,6 +18,7 @@
                         <tr class="border-b hover:bg-gray-100">
                             <td class="px-6 py-4 text-sm text-gray-700">{{ $company->name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-700">{{ $company->address }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ $company->user->name }}</td>
                             <td class="flex gap-2 px-6 py-4">
                                 <form method="POST" action="{{ route('admin.companies.updateStatus', $company) }}">
                                     @csrf
